@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { setSort } from '../../redux/slices/filterSlice';
 
 const sortingList = [
   { name: 'популярности', sortProperty: 'rating' },
@@ -6,11 +8,13 @@ const sortingList = [
   { name: 'алфавиту', sortProperty: 'title' },
 ];
 
-export default function Sort({ value, onChangeCategory }) {
+export default function Sort() {
   const [activeSort, setActiveSort] = useState(false);
+  const sort = useSelector((state) => state.filter.sort);
+  const dispatch = useDispatch();
 
   const handleSelectSortItem = (item) => {
-    onChangeCategory(item);
+    dispatch(setSort(item));
     setActiveSort(false);
   };
 
@@ -31,7 +35,7 @@ export default function Sort({ value, onChangeCategory }) {
         </svg>
         <b>Сортировка по:</b>
         <span onClick={() => setActiveSort(!activeSort)}>
-          {value.name}
+          {sort.name}
         </span>
       </div>
       {activeSort && (
@@ -41,7 +45,7 @@ export default function Sort({ value, onChangeCategory }) {
               return (
                 <li
                   key={index}
-                  className={value === item.name ? 'active' : ''}
+                  className={sort.sortProperty === item.name ? 'active' : ''}
                   onClick={() => handleSelectSortItem(item)}
                 >
                   {item.name}
